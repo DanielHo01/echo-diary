@@ -20,7 +20,7 @@ interface EventContextType {
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'echo_events_v2';
+// STORAGE_KEY is defined in storage service
 
 export function EventProvider({ children }: { children: ReactNode }) {
   const [events, setEvents] = useState<Event[]>([]);

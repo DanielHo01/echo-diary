@@ -1,6 +1,14 @@
 // Diary Types
 
 export type Mood = 'happy' | 'sad' | 'calm' | 'excited' | 'anxious' | 'neutral';
+
+export interface InterviewQa {
+  question: string;
+  options?: string[];
+  answer: string;
+  timestamp: string;
+}
+
 export type DiaryStyle = 'warm' | 'poetic' | 'simple' | 'reflective';
 
 export interface Diary {
@@ -16,13 +24,6 @@ export interface Diary {
   date: string; // YYYY-MM-DD format
   createdAt: string;
   updatedAt?: string;
-}
-
-export interface InterviewQa {
-  question: string;
-  options?: string[];
-  answer: string;
-  timestamp: string;
 }
 
 export interface CreateDiaryInput {
@@ -41,5 +42,3 @@ export interface UpdateDiaryInput {
   tags?: string[];
   mood?: Mood;
 }
-
-export type { InterviewQa };

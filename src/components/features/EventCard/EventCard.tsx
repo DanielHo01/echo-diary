@@ -1,6 +1,6 @@
 // EventCard Component
 
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { Event } from '@/types';
@@ -16,7 +16,7 @@ interface EventCardProps {
   defaultExpanded?: boolean;
 }
 
-export function EventCard({
+function EventCardInner({
   event,
   onEdit,
   onDelete,
@@ -29,25 +29,35 @@ export function EventCard({
 
   const displayExpanded = isExpanded !== undefined ? isExpanded : expanded;
 
-  const formatTime = (timestamp: string) => {
+  const formatTime = useCallback((timestamp: string) => {
     try {
-      return format(new Date(timestamp), 'HH:mm', { locale: zhCN });
+      return format(new Date(timestamp), 'HH:mm');
     } catch {
       return '--:--';
     }
-  };
+  }, []);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     if (editText.trim() && editText !== event.text) {
       onEdit(event.id, editText.trim());
     }
     setIsEditing(false);
-  };
+  }, [editText, event, onEdit]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setEditText(event.text);
     setIsEditing(false);
-  };
+  }, [event.text]);
+
+  const handleDelete = useCallback(() => {
+    if (window.confirm('确定要删除这个事件吗？')) {
+      onDelete(event.id);
+    }
+  }, [event.id, onDelete]);
+
+  const toggleExpanded = useCallback(() => {
+    setExpanded(prev => !prev);
+  }, []);
 
   return (
     <Card
@@ -62,11 +72,6 @@ export function EventCard({
           <div className="text-sm font-medium text-indigo-400">
             {formatTime(event.timestamp)}
           </div>
-          <div className="text-xs text-gray-500">
-            {format(new Date(event.timestamp), 'HH:mm', { locale: zhCN }) === formatTime(event.timestamp)
-              ? '此刻'
-              : ''}
-          </div>
         </div>
 
         {/* Content */}
@@ -75,7 +80,7 @@ export function EventCard({
             <div className="space-y-3">
               <Input
                 value={editText}
-                onChange={(e) => setEditText(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditText(e.target.value)}
                 placeholder="记录今天发生的事..."
                 autoFocus
               />
@@ -115,7 +120,7 @@ export function EventCard({
         {/* Actions */}
         <div className="flex-shrink-0 flex items-center gap-1">
           <button
-            onClick={() => setExpanded(!expanded)}
+            onClick={toggleExpanded}
             className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
             title={displayExpanded ? '收起' : '展开'}
           >
@@ -136,7 +141,7 @@ export function EventCard({
                 <Edit2 className="w-4 h-4" />
               </button>
               <button
-                onClick={() => onDelete(event.id)}
+                onClick={handleDelete}
                 className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors"
                 title="删除"
               >
@@ -168,5 +173,8 @@ export function EventCard({
     </Card>
   );
 }
+
+// Memoize to prevent unnecessary re-renders
+export const EventCard = memo(EventCardInner);
 
 export default EventCard;

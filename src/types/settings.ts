@@ -1,7 +1,6 @@
 // Settings Types
 
 export type Theme = 'dark' | 'light' | 'system';
-export type DiaryStyle = 'warm' | 'poetic' | 'simple' | 'reflective';
 
 export interface UserSettings {
   apiKey: string;
@@ -9,7 +8,7 @@ export interface UserSettings {
   language: string;
   speechLanguage: string;
   autoSave: boolean;
-  defaultDiaryStyle: DiaryStyle;
+  defaultDiaryStyle: 'warm' | 'poetic' | 'simple' | 'reflective';
   notifications: {
     dailyReminder: boolean;
     reminderTime?: string;
@@ -22,12 +21,9 @@ export interface UpdateSettingsInput {
   language?: string;
   speechLanguage?: string;
   autoSave?: boolean;
-  defaultDiaryStyle?: DiaryStyle;
+  defaultDiaryStyle?: 'warm' | 'poetic' | 'simple' | 'reflective';
   notifications?: {
     dailyReminder?: boolean;
     reminderTime?: string;
   };
 }
-
-export type { Theme };
-export type { DiaryStyle };

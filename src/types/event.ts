@@ -35,5 +35,3 @@ export interface UpdateEventInput {
   audioText?: string;
   interviewHistory?: InterviewQa[];
 }
-
-export type { InterviewQa };

@@ -1,5 +1,6 @@
 // Timeline Component
 
+import { memo } from 'react';
 import { Event } from '@/types';
 import { EventCard } from '../EventCard';
 
@@ -8,15 +9,13 @@ interface TimelineProps {
   onEdit: (id: string, text: string) => void;
   onDelete: (id: string) => void;
   emptyMessage?: string;
-  showDate?: boolean;
 }
 
-export function Timeline({
+function TimelineInner({
   events,
   onEdit,
   onDelete,
   emptyMessage = '今天还没有记录任何事件',
-  showDate = false,
 }: TimelineProps) {
   if (events.length === 0) {
     return (
@@ -63,5 +62,8 @@ export function Timeline({
     </div>
   );
 }
+
+// Memoize to prevent unnecessary re-renders
+export const Timeline = memo(TimelineInner);
 
 export default Timeline;
